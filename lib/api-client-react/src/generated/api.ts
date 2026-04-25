@@ -26,6 +26,7 @@ import type {
   ListProductsParams,
   Product,
   ProductsSummary,
+  UpdateCartItemBody,
 } from "./api.schemas";
 
 import { customFetch } from "../custom-fetch";
@@ -677,6 +678,93 @@ export const useRemoveFromCart = <
   TContext
 > => {
   return useMutation(getRemoveFromCartMutationOptions(options));
+};
+
+/**
+ * @summary Set absolute quantity for a cart item
+ */
+export const getUpdateCartItemUrl = (productId: number) => {
+  return `/api/cart/${productId}`;
+};
+
+export const updateCartItem = async (
+  productId: number,
+  updateCartItemBody: UpdateCartItemBody,
+  options?: RequestInit,
+): Promise<CartItem> => {
+  return customFetch<CartItem>(getUpdateCartItemUrl(productId), {
+    ...options,
+    method: "PATCH",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(updateCartItemBody),
+  });
+};
+
+export const getUpdateCartItemMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof updateCartItem>>,
+    TError,
+    { productId: number; data: BodyType<UpdateCartItemBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof updateCartItem>>,
+  TError,
+  { productId: number; data: BodyType<UpdateCartItemBody> },
+  TContext
+> => {
+  const mutationKey = ["updateCartItem"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof updateCartItem>>,
+    { productId: number; data: BodyType<UpdateCartItemBody> }
+  > = (props) => {
+    const { productId, data } = props ?? {};
+
+    return updateCartItem(productId, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type UpdateCartItemMutationResult = NonNullable<
+  Awaited<ReturnType<typeof updateCartItem>>
+>;
+export type UpdateCartItemMutationBody = BodyType<UpdateCartItemBody>;
+export type UpdateCartItemMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Set absolute quantity for a cart item
+ */
+export const useUpdateCartItem = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof updateCartItem>>,
+    TError,
+    { productId: number; data: BodyType<UpdateCartItemBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof updateCartItem>>,
+  TError,
+  { productId: number; data: BodyType<UpdateCartItemBody> },
+  TContext
+> => {
+  return useMutation(getUpdateCartItemMutationOptions(options));
 };
 
 /**

@@ -17,6 +17,7 @@ const DEFAULT_JSON_ACCEPT = "application/json, application/problem+json";
 
 let _baseUrl: string | null = null;
 let _authTokenGetter: AuthTokenGetter | null = null;
+let _sessionIdGetter: (() => string | null) | null = null;
 
 /**
  * Set a base URL that is prepended to every relative request URL
@@ -27,6 +28,10 @@ let _authTokenGetter: AuthTokenGetter | null = null;
  */
 export function setBaseUrl(url: string | null): void {
   _baseUrl = url ? url.replace(/\/+$/, "") : null;
+}
+
+export function setSessionIdGetter(getter: (() => string | null) | null): void {
+  _sessionIdGetter = getter;
 }
 
 /**
@@ -355,6 +360,29 @@ export async function customFetch<T = unknown>(
     const token = await _authTokenGetter();
     if (token) {
       headers.set("authorization", `Bearer ${token}`);
+    }
+  }
+
+  // Attach sessionId query param — ONLY for relative paths (i.e. our own API).
+  // Never inject into absolute URLs to avoid leaking the session id to third parties.
+  if (_sessionIdGetter) {
+    const sessionId = _sessionIdGetter();
+    const rawUrl = resolveUrl(input);
+    if (sessionId && rawUrl.startsWith("/")) {
+      const [pathname, query = ""] = rawUrl.split("?", 2);
+      const params = new URLSearchParams(query);
+      if (!params.has("sessionId")) {
+        params.set("sessionId", sessionId);
+      }
+      const newUrl = `${pathname}?${params.toString()}`;
+      if (typeof input === "string") {
+        input = newUrl;
+      } else if (isUrl(input)) {
+        // Absolute URL handled above; this branch is for safety only.
+        input = newUrl;
+      } else {
+        input = new Request(newUrl, input as Request);
+      }
     }
   }
 

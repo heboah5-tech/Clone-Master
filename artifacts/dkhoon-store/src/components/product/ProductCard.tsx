@@ -1,6 +1,6 @@
 import { Link } from "wouter";
-import { ShoppingCart, Star } from "lucide-react";
-import { Product } from "@/lib/data";
+import { ShoppingBag, Star } from "lucide-react";
+import { Product } from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/lib/cart";
 import { useToast } from "@/hooks/use-toast";
@@ -14,80 +14,79 @@ export default function ProductCard({ product }: ProductCardProps) {
   const { toast } = useToast();
 
   const handleAddToCart = (e: React.MouseEvent) => {
-    e.preventDefault(); // Prevent navigating to product detail
+    e.preventDefault();
     addToCart(product);
     toast({
       title: "تمت الإضافة للسلة",
-      description: `${product.name_ar} أضيف بنجاح.`,
+      description: `${product.nameAr} أضيف بنجاح.`,
     });
   };
 
+  const imageToUse = product.imageUrl || product.images?.[0] || "https://images.unsplash.com/photo-1594035910387-fea47794261f?auto=format&fit=crop&q=80&w=800";
+  const price = product.price;
+  const originalPrice = product.originalPrice;
+
   return (
-    <Link href={`/products/${product.id}`} className="group relative block bg-card rounded-lg overflow-hidden border border-border hover:border-primary/50 transition-all duration-300">
+    <Link href={`/products/${product.id}`} className="group relative flex flex-col bg-card rounded-lg overflow-hidden border border-border hover:border-primary/30 hover:shadow-md transition-all duration-300">
       
       {/* Badges */}
-      <div className="absolute top-3 right-3 z-10 flex flex-col gap-2">
+      <div className="absolute top-2 right-2 z-10 flex flex-col gap-1.5">
         {product.isNew && (
-          <span className="bg-primary text-primary-foreground text-xs font-bold px-2 py-1 rounded shadow-sm">
+          <span className="bg-primary text-primary-foreground text-[10px] font-bold px-2 py-0.5 rounded shadow-sm">
             جديد
           </span>
         )}
         {product.isBestseller && (
-          <span className="bg-foreground text-background text-xs font-bold px-2 py-1 rounded shadow-sm">
+          <span className="bg-secondary text-secondary-foreground text-[10px] font-bold px-2 py-0.5 rounded shadow-sm">
             الأكثر مبيعاً
           </span>
         )}
-        {product.discountPrice && (
-          <span className="bg-destructive text-destructive-foreground text-xs font-bold px-2 py-1 rounded shadow-sm">
-            تخفيض
+        {originalPrice && originalPrice > price && (
+          <span className="bg-destructive text-destructive-foreground text-[10px] font-bold px-2 py-0.5 rounded shadow-sm">
+            تخفيض {Math.round(((originalPrice - price) / originalPrice) * 100)}%
           </span>
         )}
       </div>
 
       {/* Image */}
-      <div className="aspect-[4/5] overflow-hidden bg-muted relative">
+      <div className="aspect-square overflow-hidden bg-background relative p-4">
         <img
-          src={product.image}
-          alt={product.name_en}
-          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+          src={imageToUse}
+          alt={product.name}
+          className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-105"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-background/0 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
       </div>
 
       {/* Content */}
-      <div className="p-5 flex flex-col gap-3">
-        <div className="flex justify-between items-start">
-          <div>
-            <h3 className="font-bold text-lg text-foreground group-hover:text-primary transition-colors line-clamp-1">{product.name_ar}</h3>
-            <p className="text-xs text-muted-foreground uppercase tracking-wider">{product.name_en}</p>
-          </div>
-          <div className="flex items-center text-primary text-xs">
-            <Star className="w-3 h-3 fill-current" />
-            <span className="mr-1 text-foreground">{product.rating}</span>
+      <div className="p-3 sm:p-4 flex flex-col flex-1 gap-2 border-t border-border/50">
+        <div className="flex items-center text-secondary text-xs mb-1">
+          {[...Array(5)].map((_, i) => (
+            <Star key={i} className={`w-3 h-3 ${i < Math.floor(product.rating || 5) ? 'fill-current' : 'opacity-30'}`} />
+          ))}
+          <span className="text-muted-foreground mr-1">({product.reviewCount})</span>
+        </div>
+
+        <h3 className="font-bold text-sm sm:text-base text-foreground group-hover:text-primary transition-colors line-clamp-2 leading-snug">
+          {product.nameAr}
+        </h3>
+        
+        <div className="mt-auto pt-2 flex flex-col gap-1">
+          <div className="flex items-baseline gap-2 flex-wrap">
+            <span className="text-base sm:text-lg font-bold text-primary">{price} د.إ</span>
+            {originalPrice && originalPrice > price && (
+              <span className="text-xs sm:text-sm text-muted-foreground line-through">{originalPrice} د.إ</span>
+            )}
           </div>
         </div>
 
-        <div className="flex items-center justify-between mt-auto pt-2">
-          <div className="flex flex-col">
-            {product.discountPrice ? (
-              <>
-                <span className="text-lg font-bold text-primary">{product.discountPrice} د.إ</span>
-                <span className="text-xs text-muted-foreground line-through">{product.price} د.إ</span>
-              </>
-            ) : (
-              <span className="text-lg font-bold text-primary">{product.price} د.إ</span>
-            )}
-          </div>
-          
-          <Button
-            size="icon"
-            variant="secondary"
-            className="rounded-full opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 hover:bg-primary hover:text-primary-foreground"
-            onClick={handleAddToCart}
-          >
-            <ShoppingCart className="w-4 h-4" />
-          </Button>
-        </div>
+        <Button
+          variant="default"
+          className="w-full mt-2 bg-primary text-primary-foreground hover:bg-primary/90 font-bold h-10 gap-2 shadow-sm rounded-md transition-transform active:scale-95"
+          onClick={handleAddToCart}
+        >
+          <ShoppingBag className="w-4 h-4" />
+          أضف للسلة
+        </Button>
       </div>
     </Link>
   );

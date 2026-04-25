@@ -1,0 +1,38 @@
+uploads = []
+outputs = []
+
+[[generated]]
+id = "QbphYlS93E4YG4u2M2STc"
+uri = "file://artifacts/dkhoon-store/public/products/hero-banner.png"
+type = "image"
+title = "Hero banner with perfume"
+
+[[generated]]
+id = "NgT_S4bGXqil0GptQhlj7"
+uri = "file://artifacts/dkhoon-store/public/products/oud-perfume.png"
+type = "image"
+title = "Royal Oud Perfume"
+
+[[generated]]
+id = "XYzx4OSl0pEAGJRyPD0B9"
+uri = "file://artifacts/dkhoon-store/public/products/bukhoor.png"
+type = "image"
+title = "Emirates Bukhoor"
+
+[[generated]]
+id = "r8U7xUWo0gY7hrf5-886G"
+uri = "file://artifacts/dkhoon-store/public/products/rose-musk.png"
+type = "image"
+title = "Rose Musk Perfume"
+
+[[generated]]
+id = "BXr4bKQdqr3t57IqfIKvH"
+uri = "file://artifacts/dkhoon-store/public/products/bridal-set.png"
+type = "image"
+title = "Bridal Set"
+
+[[generated]]
+id = "z7ZfG7diDUTchT505YpQ5"
+uri = "file://artifacts/dkhoon-store/public/products/amber-perfume.png"
+type = "image"
+title = "Authentic Amber Perfume"

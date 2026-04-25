@@ -285,6 +285,51 @@ export const RemoveFromCartResponse = zod.object({
 });
 
 /**
+ * @summary Set absolute quantity for a cart item
+ */
+export const UpdateCartItemParams = zod.object({
+  productId: zod.coerce.number(),
+});
+
+export const UpdateCartItemBody = zod.object({
+  quantity: zod.number().min(1),
+  sessionId: zod.string(),
+});
+
+export const updateCartItemResponseProductCurrencyDefault = `AED`;
+
+export const UpdateCartItemResponse = zod.object({
+  id: zod.number(),
+  productId: zod.number(),
+  product: zod.object({
+    id: zod.number(),
+    name: zod.string(),
+    nameAr: zod.string(),
+    description: zod.string().nullish(),
+    descriptionAr: zod.string().nullish(),
+    price: zod.number(),
+    originalPrice: zod.number().nullish(),
+    currency: zod
+      .string()
+      .default(updateCartItemResponseProductCurrencyDefault),
+    imageUrl: zod.string().nullish(),
+    images: zod.array(zod.string()),
+    categoryId: zod.number(),
+    categoryName: zod.string(),
+    categoryNameAr: zod.string(),
+    inStock: zod.boolean(),
+    rating: zod.number().nullish(),
+    reviewCount: zod.number(),
+    isNew: zod.boolean(),
+    isFeatured: zod.boolean(),
+    isBestseller: zod.boolean(),
+    volume: zod.string().nullish(),
+  }),
+  quantity: zod.number(),
+  sessionId: zod.string(),
+});
+
+/**
  * @summary Get product catalog summary
  */
 export const GetProductsSummaryResponse = zod.object({

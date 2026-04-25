@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { db, cartItemsTable, productsTable, categoriesTable } from "@workspace/db";
 import { eq, and } from "drizzle-orm";
-import { AddToCartBody, RemoveFromCartParams } from "@workspace/api-zod";
+import { AddToCartBody, RemoveFromCartParams, UpdateCartItemBody, UpdateCartItemParams } from "@workspace/api-zod";
 
 const router = Router();
 
@@ -183,6 +183,78 @@ router.post("/cart", async (req, res) => {
     });
   } catch (err) {
     req.log.error({ err }, "Failed to add to cart");
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+router.patch("/cart/:productId", async (req, res) => {
+  try {
+    const params = UpdateCartItemParams.safeParse({ productId: Number(req.params.productId) });
+    if (!params.success) {
+      res.status(400).json({ message: "Invalid product ID" });
+      return;
+    }
+
+    const body = UpdateCartItemBody.safeParse(req.body);
+    if (!body.success) {
+      res.status(400).json({ message: "Invalid request body" });
+      return;
+    }
+
+    const { quantity, sessionId } = body.data;
+
+    const [updated] = await db
+      .update(cartItemsTable)
+      .set({ quantity })
+      .where(
+        and(
+          eq(cartItemsTable.productId, params.data.productId),
+          eq(cartItemsTable.sessionId, sessionId)
+        )
+      )
+      .returning({ id: cartItemsTable.id });
+
+    if (!updated) {
+      res.status(404).json({ message: "Cart item not found" });
+      return;
+    }
+
+    const item = await getCartItemWithProduct(updated.id);
+    if (!item) {
+      res.status(500).json({ message: "Failed to retrieve cart item" });
+      return;
+    }
+
+    res.json({
+      id: item.id,
+      productId: item.productId,
+      quantity: item.quantity,
+      sessionId: item.sessionId,
+      product: {
+        id: item.productId,
+        name: item.productName ?? "",
+        nameAr: item.productNameAr ?? "",
+        description: item.productDescription,
+        descriptionAr: item.productDescriptionAr,
+        price: Number(item.productPrice ?? 0),
+        originalPrice: item.productOriginalPrice ? Number(item.productOriginalPrice) : null,
+        currency: item.productCurrency ?? "AED",
+        imageUrl: item.productImageUrl,
+        images: item.productImages ?? [],
+        categoryId: item.productCategoryId ?? 0,
+        categoryName: item.categoryName ?? "",
+        categoryNameAr: item.categoryNameAr ?? "",
+        inStock: item.productInStock ?? true,
+        rating: item.productRating ? Number(item.productRating) : null,
+        reviewCount: item.productReviewCount ?? 0,
+        isNew: item.productIsNew ?? false,
+        isFeatured: item.productIsFeatured ?? false,
+        isBestseller: item.productIsBestseller ?? false,
+        volume: item.productVolume,
+      },
+    });
+  } catch (err) {
+    req.log.error({ err }, "Failed to update cart item");
     res.status(500).json({ message: "Internal server error" });
   }
 });

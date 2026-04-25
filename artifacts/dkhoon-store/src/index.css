@@ -49,35 +49,65 @@
   --app-font-serif: 'Amiri', Georgia, serif;
   --app-font-mono: Menlo, monospace;
   --radius: 0.5rem;
+
+  --background: 37 40% 93%; /* #f5efe6 */
+  --foreground: 0 0% 15%;
+  
+  --border: 37 20% 85%;
+  --input: 37 20% 85%;
+  --ring: 44 54% 54%; /* gold */
+  
+  --card: 0 0% 100%;
+  --card-foreground: 0 0% 15%;
+  --card-border: 37 20% 85%;
+  
+  --popover: 0 0% 100%;
+  --popover-foreground: 0 0% 15%;
+  --popover-border: 37 20% 85%;
+  
+  --primary: 0 57% 27%; /* #6d1e1e - Maroon/Burgundy */
+  --primary-foreground: 0 0% 100%;
+  
+  --secondary: 44 54% 54%; /* #c9a84c - Gold */
+  --secondary-foreground: 0 0% 100%;
+  
+  --muted: 37 30% 90%;
+  --muted-foreground: 0 0% 40%;
+  
+  --accent: 44 54% 54%;
+  --accent-foreground: 0 0% 100%;
+  
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 98%;
 }
 
 .dark {
-  --background: 0 0% 4%; /* #0a0a0a */
-  --foreground: 0 0% 98%;
+  --background: 37 40% 93%; /* Always light */
+  --foreground: 0 0% 15%;
   
-  --border: 0 0% 15%;
-  --input: 0 0% 15%;
-  --ring: 44 54% 54%; /* gold */
+  --border: 37 20% 85%;
+  --input: 37 20% 85%;
+  --ring: 44 54% 54%;
   
-  --card: 0 0% 6%;
-  --card-foreground: 0 0% 98%;
-  --card-border: 0 0% 15%;
+  --card: 0 0% 100%;
+  --card-foreground: 0 0% 15%;
+  --card-border: 37 20% 85%;
   
-  --popover: 0 0% 6%;
-  --popover-foreground: 0 0% 98%;
-  --popover-border: 0 0% 15%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 0 0% 15%;
+  --popover-border: 37 20% 85%;
   
-  --primary: 44 54% 54%; /* #c9a84c */
-  --primary-foreground: 0 0% 10%;
+  --primary: 0 57% 27%;
+  --primary-foreground: 0 0% 100%;
   
-  --secondary: 0 0% 15%;
-  --secondary-foreground: 0 0% 98%;
+  --secondary: 44 54% 54%;
+  --secondary-foreground: 0 0% 100%;
   
-  --muted: 0 0% 15%;
-  --muted-foreground: 0 0% 60%;
+  --muted: 37 30% 90%;
+  --muted-foreground: 0 0% 40%;
   
   --accent: 44 54% 54%;
-  --accent-foreground: 0 0% 10%;
+  --accent-foreground: 0 0% 100%;
   
   --destructive: 0 84% 60%;
   --destructive-foreground: 0 0% 98%;

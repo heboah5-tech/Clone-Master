@@ -59,6 +59,12 @@ export interface AddToCartBody {
   sessionId: string;
 }
 
+export interface UpdateCartItemBody {
+  /** @minimum 1 */
+  quantity: number;
+  sessionId: string;
+}
+
 export interface Banner {
   id: number;
   title: string;
