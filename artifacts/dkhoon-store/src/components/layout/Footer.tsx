@@ -1,6 +1,6 @@
 import { Link } from "wouter";
 import { SiVisa, SiMastercard, SiApplepay } from "react-icons/si";
-import { Phone, Mail, MapPin, Instagram, Twitter, Facebook } from "lucide-react";
+import { Phone, Mail, Instagram, Twitter, Facebook } from "lucide-react";
 
 export default function Footer() {
   return (
@@ -45,10 +45,6 @@ export default function Footer() {
               <li className="flex items-center gap-3">
                 <Mail className="w-5 h-5 text-primary" />
                 <span className="font-medium">info@dkhoonemirates.com</span>
-              </li>
-              <li className="flex items-center gap-3">
-                <MapPin className="w-5 h-5 text-primary" />
-                <span className="font-medium">دبي، الإمارات العربية المتحدة</span>
               </li>
             </ul>
           </div>
