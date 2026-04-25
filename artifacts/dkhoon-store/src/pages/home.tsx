@@ -1,15 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
-import { ShieldCheck, Truck, Star, Sparkles, Clock, BadgePercent, Gift, RotateCcw } from "lucide-react";
-
-const OFFER = {
-  titleAr: "باقة فخامة دخوني",
-  subtitleAr: "تشكيلة فاخرة من أرقى العطور والبخور الشرقية الأصيلة",
-  price: 395,
-  originalPrice: 1580,
-  image: "/products/featured-offer.jpg",
-};
+import { ShieldCheck, Truck, Star, Sparkles, Clock, BadgePercent, Gift, RotateCcw, ShoppingBag, Flame } from "lucide-react";
+import { MAIN_OFFER, MORE_OFFERS, FEATURED_PERFUMES, type Item } from "@/data/offers";
 
 function useCountdown(initialSeconds: number) {
   const [s, setS] = useState(initialSeconds);
@@ -24,8 +17,10 @@ function useCountdown(initialSeconds: number) {
 }
 
 export default function Home() {
-  const discount = Math.round(((OFFER.originalPrice - OFFER.price) / OFFER.originalPrice) * 100);
-  const saved = OFFER.originalPrice - OFFER.price;
+  const discount = MAIN_OFFER.originalPrice
+    ? Math.round(((MAIN_OFFER.originalPrice - MAIN_OFFER.price) / MAIN_OFFER.originalPrice) * 100)
+    : 0;
+  const saved = (MAIN_OFFER.originalPrice ?? MAIN_OFFER.price) - MAIN_OFFER.price;
   const { hh, mm, ss } = useCountdown(6 * 3600 + 24 * 60 + 18);
 
   return (
@@ -51,8 +46,8 @@ export default function Home() {
           {/* Image */}
           <div className="relative bg-gradient-to-b from-[#f8f1e2] to-[#ede1c8]">
             <img
-              src={OFFER.image}
-              alt={OFFER.titleAr}
+              src={MAIN_OFFER.image}
+              alt={MAIN_OFFER.titleAr}
               className="w-full h-auto object-contain"
             />
             {/* Discount badge */}
@@ -83,10 +78,10 @@ export default function Home() {
             </div>
 
             <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground leading-tight">
-              {OFFER.titleAr}
+              {MAIN_OFFER.titleAr}
             </h1>
             <p className="text-muted-foreground text-sm sm:text-base md:text-lg max-w-xl leading-relaxed -mt-1">
-              {OFFER.subtitleAr}
+              {MAIN_OFFER.subtitleAr}
             </p>
 
             {/* Price block */}
@@ -96,11 +91,11 @@ export default function Home() {
               </div>
               <div className="flex items-baseline justify-center gap-3 flex-wrap">
                 <span className="text-4xl sm:text-5xl md:text-6xl font-bold text-primary leading-none">
-                  {OFFER.price}
+                  {MAIN_OFFER.price}
                   <span className="text-xl sm:text-2xl mr-1.5 align-middle">ر.س</span>
                 </span>
                 <span className="text-base sm:text-lg text-muted-foreground line-through font-medium">
-                  بدلاً من {OFFER.originalPrice} ر.س
+                  بدلاً من {MAIN_OFFER.originalPrice} ر.س
                 </span>
               </div>
             </div>
@@ -119,7 +114,7 @@ export default function Home() {
             </div>
 
             {/* Buy Now */}
-            <Link href="/checkout" className="w-full max-w-md">
+            <Link href={`/checkout?o=${MAIN_OFFER.id}`} className="w-full max-w-md">
               <Button
                 size="lg"
                 className="w-full bg-gradient-to-br from-primary to-[#5a1414] text-primary-foreground hover:opacity-95 text-lg sm:text-xl font-bold py-7 sm:py-8 rounded-2xl shadow-xl shadow-primary/25 transition-all active:scale-[0.98] hover:shadow-2xl hover:shadow-primary/30"
@@ -177,6 +172,145 @@ export default function Home() {
           </ul>
         </div>
       </section>
+
+      {/* More offers section */}
+      <section className="container mx-auto px-3 sm:px-4 mt-10 sm:mt-14 max-w-5xl">
+        <div className="text-center mb-6 sm:mb-8">
+          <div className="inline-flex items-center gap-2 text-primary font-bold text-xs sm:text-sm mb-2">
+            <Flame className="w-4 h-4 fill-secondary text-secondary" />
+            <span className="tracking-wider">عروض أخرى مميزة</span>
+            <Flame className="w-4 h-4 fill-secondary text-secondary" />
+          </div>
+          <h2 className="text-2xl sm:text-3xl font-bold text-foreground">
+            اختر عرضك المفضّل
+          </h2>
+          <p className="text-muted-foreground text-sm mt-1.5">
+            مجموعة من أفضل العروض الحصرية بأسعار لا تُفوّت
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+          {MORE_OFFERS.map((offer) => (
+            <OfferCard key={offer.id} item={offer} />
+          ))}
+        </div>
+      </section>
+
+      {/* Featured perfumes section */}
+      <section className="container mx-auto px-3 sm:px-4 mt-12 sm:mt-16 max-w-6xl">
+        <div className="text-center mb-6 sm:mb-8">
+          <div className="inline-flex items-center gap-2 text-primary font-bold text-xs sm:text-sm mb-2">
+            <Sparkles className="w-4 h-4 fill-secondary text-secondary" />
+            <span className="tracking-wider">الأكثر مبيعاً</span>
+            <Sparkles className="w-4 h-4 fill-secondary text-secondary" />
+          </div>
+          <h2 className="text-2xl sm:text-3xl font-bold text-foreground">
+            أشهر عطور دخون الإماراتية
+          </h2>
+          <p className="text-muted-foreground text-sm mt-1.5">
+            تشكيلة من أفخم العطور الشرقية الأصيلة
+          </p>
+        </div>
+
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-5">
+          {FEATURED_PERFUMES.map((perfume) => (
+            <PerfumeCard key={perfume.id} item={perfume} />
+          ))}
+        </div>
+      </section>
     </div>
+  );
+}
+
+function OfferCard({ item }: { item: Item }) {
+  const hasDiscount = item.originalPrice && item.originalPrice > item.price;
+  const discount = hasDiscount
+    ? Math.round(((item.originalPrice! - item.price) / item.originalPrice!) * 100)
+    : 0;
+
+  return (
+    <Link
+      href={`/checkout?o=${item.id}`}
+      className="group block bg-card rounded-2xl shadow-md hover:shadow-xl transition-all border border-border/40 overflow-hidden relative active:scale-[0.99]"
+      data-testid={`card-offer-${item.id}`}
+    >
+        <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-primary via-secondary to-primary z-10" />
+        <div className="relative bg-gradient-to-b from-[#f8f1e2] to-[#ede1c8] aspect-[4/5] overflow-hidden">
+          <img
+            src={item.image}
+            alt={item.titleAr}
+            className="w-full h-full object-contain p-2 group-hover:scale-105 transition-transform duration-500"
+            loading="lazy"
+          />
+          {hasDiscount && (
+            <div className="absolute top-2.5 right-2.5 bg-gradient-to-br from-[#d63333] to-[#a01818] text-white text-xs font-bold px-2.5 py-1 rounded-xl shadow-md flex items-center gap-1">
+              <BadgePercent className="w-3 h-3" />
+              {discount}%
+            </div>
+          )}
+          {item.badge && (
+            <div className="absolute bottom-2.5 left-2.5 bg-foreground text-secondary text-[10px] font-bold px-2.5 py-1 rounded-full shadow-md">
+              {item.badge}
+            </div>
+          )}
+        </div>
+        <div className="p-4 flex flex-col gap-2.5">
+          <h3 className="font-bold text-base sm:text-lg text-foreground line-clamp-1">
+            {item.titleAr}
+          </h3>
+          {item.subtitleAr && (
+            <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed -mt-1">
+              {item.subtitleAr}
+            </p>
+          )}
+          <div className="flex items-baseline gap-2 flex-wrap">
+            <span className="text-xl font-bold text-primary">
+              {item.price} <span className="text-xs">ر.س</span>
+            </span>
+            {hasDiscount && (
+              <span className="text-xs text-muted-foreground line-through font-medium">
+                {item.originalPrice} ر.س
+              </span>
+            )}
+          </div>
+          <div className="bg-gradient-to-br from-primary to-[#5a1414] text-primary-foreground text-center text-sm font-bold py-2.5 rounded-xl shadow-md shadow-primary/15 mt-1 flex items-center justify-center gap-2">
+            <ShoppingBag className="w-4 h-4" />
+            اشترِ الآن
+          </div>
+        </div>
+    </Link>
+  );
+}
+
+function PerfumeCard({ item }: { item: Item }) {
+  return (
+    <Link
+      href={`/checkout?o=${item.id}`}
+      className="group block bg-card rounded-2xl shadow-sm hover:shadow-lg transition-all border border-border/40 overflow-hidden active:scale-[0.99]"
+      data-testid={`card-perfume-${item.id}`}
+    >
+        <div className="relative bg-gradient-to-b from-[#f8f1e2] to-[#ede1c8] aspect-square overflow-hidden">
+          <img
+            src={item.image}
+            alt={item.titleAr}
+            className="w-full h-full object-contain p-2 group-hover:scale-105 transition-transform duration-500"
+            loading="lazy"
+          />
+        </div>
+        <div className="p-3 sm:p-4 flex flex-col gap-2">
+          <h3 className="font-bold text-sm sm:text-base text-foreground line-clamp-1 text-center">
+            {item.titleAr}
+          </h3>
+          <div className="flex items-baseline justify-center gap-1">
+            <span className="text-base sm:text-lg font-bold text-primary">
+              {item.price}
+            </span>
+            <span className="text-xs text-muted-foreground font-bold">ر.س</span>
+          </div>
+          <div className="bg-secondary/10 text-primary text-center text-xs font-bold py-2 rounded-lg group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+            اشترِ الآن
+          </div>
+        </div>
+    </Link>
   );
 }

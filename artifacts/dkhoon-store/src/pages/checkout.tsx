@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Link } from "wouter";
+import { useMemo, useState } from "react";
+import { Link, useSearch } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -15,13 +15,7 @@ import {
   Package,
   Check,
 } from "lucide-react";
-
-const OFFER = {
-  titleAr: "باقة فخامة دخوني",
-  price: 395,
-  originalPrice: 1580,
-  image: "/products/featured-offer.jpg",
-};
+import { findItem } from "@/data/offers";
 
 const SHIPPING = 0;
 
@@ -29,6 +23,11 @@ type Step = 1 | 2;
 
 export default function Checkout() {
   const { toast } = useToast();
+  const search = useSearch();
+  const OFFER = useMemo(() => {
+    const params = new URLSearchParams(search);
+    return findItem(params.get("o"));
+  }, [search]);
   const [step, setStep] = useState<Step>(1);
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -67,7 +66,8 @@ export default function Checkout() {
   };
 
   const total = OFFER.price + SHIPPING;
-  const saved = OFFER.originalPrice - OFFER.price;
+  const hasDiscount = !!OFFER.originalPrice && OFFER.originalPrice > OFFER.price;
+  const saved = hasDiscount ? OFFER.originalPrice! - OFFER.price : 0;
 
   const validateStep1 = () => {
     const fields: (keyof typeof form)[] = ["fullName", "email", "phone", "address", "city"];
@@ -181,7 +181,9 @@ export default function Checkout() {
             </div>
             <div className="text-left">
               <div className="text-base font-bold text-primary">ر.س {total}</div>
-              <div className="text-[10px] text-emerald-600 font-bold">وفّر {saved}</div>
+              {hasDiscount && (
+                <div className="text-[10px] text-emerald-600 font-bold">وفّر {saved}</div>
+              )}
             </div>
           </div>
         </div>
@@ -419,10 +421,12 @@ export default function Checkout() {
               </div>
 
               <div className="space-y-3 text-sm font-medium text-foreground/80 mb-5">
-                <div className="flex justify-between">
-                  <span>السعر الأصلي</span>
-                  <span className="text-muted-foreground line-through">ر.س {OFFER.originalPrice}</span>
-                </div>
+                {hasDiscount && (
+                  <div className="flex justify-between">
+                    <span>السعر الأصلي</span>
+                    <span className="text-muted-foreground line-through">ر.س {OFFER.originalPrice}</span>
+                  </div>
+                )}
                 <div className="flex justify-between">
                   <span>المجموع الفرعي</span>
                   <span className="text-foreground font-bold">ر.س {OFFER.price}</span>
@@ -431,10 +435,12 @@ export default function Checkout() {
                   <span>الشحن</span>
                   <span className="text-primary font-bold">مجاني</span>
                 </div>
-                <div className="flex justify-between text-emerald-600">
-                  <span className="font-bold">وفرت</span>
-                  <span className="font-bold">ر.س {saved}</span>
-                </div>
+                {hasDiscount && (
+                  <div className="flex justify-between text-emerald-600">
+                    <span className="font-bold">وفرت</span>
+                    <span className="font-bold">ر.س {saved}</span>
+                  </div>
+                )}
               </div>
 
               <div className="bg-muted/40 -mx-6 px-6 py-4 border-t border-border/50">
