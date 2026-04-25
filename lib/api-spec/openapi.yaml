@@ -10,6 +10,14 @@ servers:
 tags:
   - name: health
     description: Health operations
+  - name: products
+    description: Product operations
+  - name: categories
+    description: Category operations
+  - name: cart
+    description: Cart operations
+  - name: featured
+    description: Featured/promotional content
 paths:
   /healthz:
     get:
@@ -24,6 +32,162 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /products:
+    get:
+      operationId: listProducts
+      tags: [products]
+      summary: List products
+      parameters:
+        - name: categoryId
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: search
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 20
+        - name: offset
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 0
+      responses:
+        "200":
+          description: List of products
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Product"
+
+  /products/{id}:
+    get:
+      operationId: getProduct
+      tags: [products]
+      summary: Get product by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Product details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+        "404":
+          description: Product not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /categories:
+    get:
+      operationId: listCategories
+      tags: [categories]
+      summary: List categories
+      responses:
+        "200":
+          description: List of categories
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Category"
+
+  /featured:
+    get:
+      operationId: getFeatured
+      tags: [featured]
+      summary: Get featured products and banners
+      responses:
+        "200":
+          description: Featured content
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FeaturedContent"
+
+  /cart:
+    get:
+      operationId: getCart
+      tags: [cart]
+      summary: Get cart items
+      responses:
+        "200":
+          description: Cart items
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CartItem"
+    post:
+      operationId: addToCart
+      tags: [cart]
+      summary: Add item to cart
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AddToCartBody"
+      responses:
+        "201":
+          description: Item added
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CartItem"
+
+  /cart/{productId}:
+    delete:
+      operationId: removeFromCart
+      tags: [cart]
+      summary: Remove item from cart
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Item removed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CartItem"
+
+  /products/summary:
+    get:
+      operationId: getProductsSummary
+      tags: [products]
+      summary: Get product catalog summary
+      responses:
+        "200":
+          description: Summary stats
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProductsSummary"
+
 components:
   schemas:
     HealthStatus:
@@ -34,3 +198,217 @@ components:
       required:
         - status
 
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+        - message
+
+    Category:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        nameAr:
+          type: string
+        slug:
+          type: string
+        imageUrl:
+          type: string
+          nullable: true
+        productCount:
+          type: integer
+      required:
+        - id
+        - name
+        - nameAr
+        - slug
+        - productCount
+
+    Product:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        nameAr:
+          type: string
+        description:
+          type: string
+          nullable: true
+        descriptionAr:
+          type: string
+          nullable: true
+        price:
+          type: number
+        originalPrice:
+          type: number
+          nullable: true
+        currency:
+          type: string
+          default: "AED"
+        imageUrl:
+          type: string
+          nullable: true
+        images:
+          type: array
+          items:
+            type: string
+        categoryId:
+          type: integer
+        categoryName:
+          type: string
+        categoryNameAr:
+          type: string
+        inStock:
+          type: boolean
+        rating:
+          type: number
+          nullable: true
+        reviewCount:
+          type: integer
+        isNew:
+          type: boolean
+        isFeatured:
+          type: boolean
+        isBestseller:
+          type: boolean
+        volume:
+          type: string
+          nullable: true
+      required:
+        - id
+        - name
+        - nameAr
+        - price
+        - currency
+        - categoryId
+        - categoryName
+        - categoryNameAr
+        - inStock
+        - reviewCount
+        - isNew
+        - isFeatured
+        - isBestseller
+        - images
+
+    CartItem:
+      type: object
+      properties:
+        id:
+          type: integer
+        productId:
+          type: integer
+        product:
+          $ref: "#/components/schemas/Product"
+        quantity:
+          type: integer
+        sessionId:
+          type: string
+      required:
+        - id
+        - productId
+        - product
+        - quantity
+        - sessionId
+
+    AddToCartBody:
+      type: object
+      properties:
+        productId:
+          type: integer
+        quantity:
+          type: integer
+          default: 1
+        sessionId:
+          type: string
+      required:
+        - productId
+        - sessionId
+
+    FeaturedContent:
+      type: object
+      properties:
+        heroBanners:
+          type: array
+          items:
+            $ref: "#/components/schemas/Banner"
+        featuredProducts:
+          type: array
+          items:
+            $ref: "#/components/schemas/Product"
+        newArrivals:
+          type: array
+          items:
+            $ref: "#/components/schemas/Product"
+        bestsellers:
+          type: array
+          items:
+            $ref: "#/components/schemas/Product"
+      required:
+        - heroBanners
+        - featuredProducts
+        - newArrivals
+        - bestsellers
+
+    Banner:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        titleAr:
+          type: string
+        subtitle:
+          type: string
+          nullable: true
+        subtitleAr:
+          type: string
+          nullable: true
+        imageUrl:
+          type: string
+        linkUrl:
+          type: string
+          nullable: true
+      required:
+        - id
+        - title
+        - titleAr
+        - imageUrl
+
+    ProductsSummary:
+      type: object
+      properties:
+        totalProducts:
+          type: integer
+        totalCategories:
+          type: integer
+        inStockCount:
+          type: integer
+        newArrivalsCount:
+          type: integer
+        bestsellersCount:
+          type: integer
+        priceRange:
+          type: object
+          properties:
+            min:
+              type: number
+            max:
+              type: number
+          required:
+            - min
+            - max
+      required:
+        - totalProducts
+        - totalCategories
+        - inStockCount
+        - newArrivalsCount
+        - bestsellersCount
+        - priceRange

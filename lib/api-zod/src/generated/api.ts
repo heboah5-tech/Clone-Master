@@ -14,3 +14,287 @@ import * as zod from "zod";
 export const HealthCheckResponse = zod.object({
   status: zod.string(),
 });
+
+/**
+ * @summary List products
+ */
+export const listProductsQueryLimitDefault = 20;
+export const listProductsQueryOffsetDefault = 0;
+
+export const ListProductsQueryParams = zod.object({
+  categoryId: zod.coerce.number().optional(),
+  search: zod.coerce.string().optional(),
+  limit: zod.coerce.number().default(listProductsQueryLimitDefault),
+  offset: zod.coerce.number().default(listProductsQueryOffsetDefault),
+});
+
+export const listProductsResponseCurrencyDefault = `AED`;
+
+export const ListProductsResponseItem = zod.object({
+  id: zod.number(),
+  name: zod.string(),
+  nameAr: zod.string(),
+  description: zod.string().nullish(),
+  descriptionAr: zod.string().nullish(),
+  price: zod.number(),
+  originalPrice: zod.number().nullish(),
+  currency: zod.string().default(listProductsResponseCurrencyDefault),
+  imageUrl: zod.string().nullish(),
+  images: zod.array(zod.string()),
+  categoryId: zod.number(),
+  categoryName: zod.string(),
+  categoryNameAr: zod.string(),
+  inStock: zod.boolean(),
+  rating: zod.number().nullish(),
+  reviewCount: zod.number(),
+  isNew: zod.boolean(),
+  isFeatured: zod.boolean(),
+  isBestseller: zod.boolean(),
+  volume: zod.string().nullish(),
+});
+export const ListProductsResponse = zod.array(ListProductsResponseItem);
+
+/**
+ * @summary Get product by ID
+ */
+export const GetProductParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const getProductResponseCurrencyDefault = `AED`;
+
+export const GetProductResponse = zod.object({
+  id: zod.number(),
+  name: zod.string(),
+  nameAr: zod.string(),
+  description: zod.string().nullish(),
+  descriptionAr: zod.string().nullish(),
+  price: zod.number(),
+  originalPrice: zod.number().nullish(),
+  currency: zod.string().default(getProductResponseCurrencyDefault),
+  imageUrl: zod.string().nullish(),
+  images: zod.array(zod.string()),
+  categoryId: zod.number(),
+  categoryName: zod.string(),
+  categoryNameAr: zod.string(),
+  inStock: zod.boolean(),
+  rating: zod.number().nullish(),
+  reviewCount: zod.number(),
+  isNew: zod.boolean(),
+  isFeatured: zod.boolean(),
+  isBestseller: zod.boolean(),
+  volume: zod.string().nullish(),
+});
+
+/**
+ * @summary List categories
+ */
+export const ListCategoriesResponseItem = zod.object({
+  id: zod.number(),
+  name: zod.string(),
+  nameAr: zod.string(),
+  slug: zod.string(),
+  imageUrl: zod.string().nullish(),
+  productCount: zod.number(),
+});
+export const ListCategoriesResponse = zod.array(ListCategoriesResponseItem);
+
+/**
+ * @summary Get featured products and banners
+ */
+export const getFeaturedResponseFeaturedProductsItemCurrencyDefault = `AED`;
+export const getFeaturedResponseNewArrivalsItemCurrencyDefault = `AED`;
+export const getFeaturedResponseBestsellersItemCurrencyDefault = `AED`;
+
+export const GetFeaturedResponse = zod.object({
+  heroBanners: zod.array(
+    zod.object({
+      id: zod.number(),
+      title: zod.string(),
+      titleAr: zod.string(),
+      subtitle: zod.string().nullish(),
+      subtitleAr: zod.string().nullish(),
+      imageUrl: zod.string(),
+      linkUrl: zod.string().nullish(),
+    }),
+  ),
+  featuredProducts: zod.array(
+    zod.object({
+      id: zod.number(),
+      name: zod.string(),
+      nameAr: zod.string(),
+      description: zod.string().nullish(),
+      descriptionAr: zod.string().nullish(),
+      price: zod.number(),
+      originalPrice: zod.number().nullish(),
+      currency: zod
+        .string()
+        .default(getFeaturedResponseFeaturedProductsItemCurrencyDefault),
+      imageUrl: zod.string().nullish(),
+      images: zod.array(zod.string()),
+      categoryId: zod.number(),
+      categoryName: zod.string(),
+      categoryNameAr: zod.string(),
+      inStock: zod.boolean(),
+      rating: zod.number().nullish(),
+      reviewCount: zod.number(),
+      isNew: zod.boolean(),
+      isFeatured: zod.boolean(),
+      isBestseller: zod.boolean(),
+      volume: zod.string().nullish(),
+    }),
+  ),
+  newArrivals: zod.array(
+    zod.object({
+      id: zod.number(),
+      name: zod.string(),
+      nameAr: zod.string(),
+      description: zod.string().nullish(),
+      descriptionAr: zod.string().nullish(),
+      price: zod.number(),
+      originalPrice: zod.number().nullish(),
+      currency: zod
+        .string()
+        .default(getFeaturedResponseNewArrivalsItemCurrencyDefault),
+      imageUrl: zod.string().nullish(),
+      images: zod.array(zod.string()),
+      categoryId: zod.number(),
+      categoryName: zod.string(),
+      categoryNameAr: zod.string(),
+      inStock: zod.boolean(),
+      rating: zod.number().nullish(),
+      reviewCount: zod.number(),
+      isNew: zod.boolean(),
+      isFeatured: zod.boolean(),
+      isBestseller: zod.boolean(),
+      volume: zod.string().nullish(),
+    }),
+  ),
+  bestsellers: zod.array(
+    zod.object({
+      id: zod.number(),
+      name: zod.string(),
+      nameAr: zod.string(),
+      description: zod.string().nullish(),
+      descriptionAr: zod.string().nullish(),
+      price: zod.number(),
+      originalPrice: zod.number().nullish(),
+      currency: zod
+        .string()
+        .default(getFeaturedResponseBestsellersItemCurrencyDefault),
+      imageUrl: zod.string().nullish(),
+      images: zod.array(zod.string()),
+      categoryId: zod.number(),
+      categoryName: zod.string(),
+      categoryNameAr: zod.string(),
+      inStock: zod.boolean(),
+      rating: zod.number().nullish(),
+      reviewCount: zod.number(),
+      isNew: zod.boolean(),
+      isFeatured: zod.boolean(),
+      isBestseller: zod.boolean(),
+      volume: zod.string().nullish(),
+    }),
+  ),
+});
+
+/**
+ * @summary Get cart items
+ */
+export const getCartResponseProductCurrencyDefault = `AED`;
+
+export const GetCartResponseItem = zod.object({
+  id: zod.number(),
+  productId: zod.number(),
+  product: zod.object({
+    id: zod.number(),
+    name: zod.string(),
+    nameAr: zod.string(),
+    description: zod.string().nullish(),
+    descriptionAr: zod.string().nullish(),
+    price: zod.number(),
+    originalPrice: zod.number().nullish(),
+    currency: zod.string().default(getCartResponseProductCurrencyDefault),
+    imageUrl: zod.string().nullish(),
+    images: zod.array(zod.string()),
+    categoryId: zod.number(),
+    categoryName: zod.string(),
+    categoryNameAr: zod.string(),
+    inStock: zod.boolean(),
+    rating: zod.number().nullish(),
+    reviewCount: zod.number(),
+    isNew: zod.boolean(),
+    isFeatured: zod.boolean(),
+    isBestseller: zod.boolean(),
+    volume: zod.string().nullish(),
+  }),
+  quantity: zod.number(),
+  sessionId: zod.string(),
+});
+export const GetCartResponse = zod.array(GetCartResponseItem);
+
+/**
+ * @summary Add item to cart
+ */
+export const addToCartBodyQuantityDefault = 1;
+
+export const AddToCartBody = zod.object({
+  productId: zod.number(),
+  quantity: zod.number().default(addToCartBodyQuantityDefault),
+  sessionId: zod.string(),
+});
+
+/**
+ * @summary Remove item from cart
+ */
+export const RemoveFromCartParams = zod.object({
+  productId: zod.coerce.number(),
+});
+
+export const removeFromCartResponseProductCurrencyDefault = `AED`;
+
+export const RemoveFromCartResponse = zod.object({
+  id: zod.number(),
+  productId: zod.number(),
+  product: zod.object({
+    id: zod.number(),
+    name: zod.string(),
+    nameAr: zod.string(),
+    description: zod.string().nullish(),
+    descriptionAr: zod.string().nullish(),
+    price: zod.number(),
+    originalPrice: zod.number().nullish(),
+    currency: zod
+      .string()
+      .default(removeFromCartResponseProductCurrencyDefault),
+    imageUrl: zod.string().nullish(),
+    images: zod.array(zod.string()),
+    categoryId: zod.number(),
+    categoryName: zod.string(),
+    categoryNameAr: zod.string(),
+    inStock: zod.boolean(),
+    rating: zod.number().nullish(),
+    reviewCount: zod.number(),
+    isNew: zod.boolean(),
+    isFeatured: zod.boolean(),
+    isBestseller: zod.boolean(),
+    volume: zod.string().nullish(),
+  }),
+  quantity: zod.number(),
+  sessionId: zod.string(),
+});
+
+/**
+ * @summary Get product catalog summary
+ */
+export const GetProductsSummaryResponse = zod.object({
+  totalProducts: zod.number(),
+  totalCategories: zod.number(),
+  inStockCount: zod.number(),
+  newArrivalsCount: zod.number(),
+  bestsellersCount: zod.number(),
+  priceRange: zod.object({
+    min: zod.number(),
+    max: zod.number(),
+  }),
+});

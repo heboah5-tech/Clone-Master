@@ -8,3 +8,91 @@
 export interface HealthStatus {
   status: string;
 }
+
+export interface Error {
+  message: string;
+}
+
+export interface Category {
+  id: number;
+  name: string;
+  nameAr: string;
+  slug: string;
+  imageUrl?: string | null;
+  productCount: number;
+}
+
+export interface Product {
+  id: number;
+  name: string;
+  nameAr: string;
+  description?: string | null;
+  descriptionAr?: string | null;
+  price: number;
+  originalPrice?: number | null;
+  currency: string;
+  imageUrl?: string | null;
+  images: string[];
+  categoryId: number;
+  categoryName: string;
+  categoryNameAr: string;
+  inStock: boolean;
+  rating?: number | null;
+  reviewCount: number;
+  isNew: boolean;
+  isFeatured: boolean;
+  isBestseller: boolean;
+  volume?: string | null;
+}
+
+export interface CartItem {
+  id: number;
+  productId: number;
+  product: Product;
+  quantity: number;
+  sessionId: string;
+}
+
+export interface AddToCartBody {
+  productId: number;
+  quantity?: number;
+  sessionId: string;
+}
+
+export interface Banner {
+  id: number;
+  title: string;
+  titleAr: string;
+  subtitle?: string | null;
+  subtitleAr?: string | null;
+  imageUrl: string;
+  linkUrl?: string | null;
+}
+
+export interface FeaturedContent {
+  heroBanners: Banner[];
+  featuredProducts: Product[];
+  newArrivals: Product[];
+  bestsellers: Product[];
+}
+
+export type ProductsSummaryPriceRange = {
+  min: number;
+  max: number;
+};
+
+export interface ProductsSummary {
+  totalProducts: number;
+  totalCategories: number;
+  inStockCount: number;
+  newArrivalsCount: number;
+  bestsellersCount: number;
+  priceRange: ProductsSummaryPriceRange;
+}
+
+export type ListProductsParams = {
+  categoryId?: number;
+  search?: string;
+  limit?: number;
+  offset?: number;
+};
