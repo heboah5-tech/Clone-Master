@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { ShieldCheck, Truck, Star, Sparkles, Clock, BadgePercent, Gift, RotateCcw, ShoppingBag, Flame } from "lucide-react";
-import { MAIN_OFFER, MORE_OFFERS, FEATURED_PERFUMES, type Item } from "@/data/offers";
+import { MAIN_OFFER, MORE_OFFERS, FEATURED_PERFUMES, BUKHOOR_ITEMS, type Item } from "@/data/offers";
 
 function useCountdown(initialSeconds: number) {
   const [s, setS] = useState(initialSeconds);
@@ -218,7 +218,69 @@ export default function Home() {
           ))}
         </div>
       </section>
+
+      {/* Bukhoor section */}
+      <section className="container mx-auto px-3 sm:px-4 mt-12 sm:mt-16 max-w-5xl">
+        <div className="text-center mb-6 sm:mb-8">
+          <div className="inline-flex items-center gap-2 text-primary font-bold text-xs sm:text-sm mb-2">
+            <Flame className="w-4 h-4 fill-secondary text-secondary" />
+            <span className="tracking-wider">منتجات البخور</span>
+            <Flame className="w-4 h-4 fill-secondary text-secondary" />
+          </div>
+          <h2 className="text-2xl sm:text-3xl font-bold text-foreground">
+            بخور دخون الإماراتية
+          </h2>
+          <p className="text-muted-foreground text-sm mt-1.5">
+            تشكيلة من أفخم أنواع البخور الأصيل
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5">
+          {BUKHOOR_ITEMS.map((item) => (
+            <BukhoorCard key={item.id} item={item} />
+          ))}
+        </div>
+      </section>
     </div>
+  );
+}
+
+function BukhoorCard({ item }: { item: Item }) {
+  return (
+    <Link
+      href={`/checkout?o=${item.id}`}
+      className="group block bg-card rounded-2xl shadow-md hover:shadow-xl transition-all border border-border/40 overflow-hidden active:scale-[0.99]"
+      data-testid={`card-bukhoor-${item.id}`}
+    >
+      <div className="relative bg-gradient-to-br from-[#1a1410] via-[#2a1d15] to-[#1a1410] aspect-square overflow-hidden">
+        <img
+          src={item.image}
+          alt={item.titleAr}
+          className="w-full h-full object-contain p-4 group-hover:scale-105 transition-transform duration-500"
+          loading="lazy"
+        />
+      </div>
+      <div className="p-4 flex flex-col gap-2 text-center">
+        <h3 className="font-bold text-base text-foreground line-clamp-1">
+          {item.titleAr}
+        </h3>
+        {item.subtitleAr && (
+          <p className="text-xs text-muted-foreground line-clamp-1">
+            {item.subtitleAr}
+          </p>
+        )}
+        <div className="flex items-baseline justify-center gap-1 mt-1">
+          <span className="text-lg font-bold text-primary">
+            {item.price}
+          </span>
+          <span className="text-xs text-muted-foreground font-bold">ر.س</span>
+        </div>
+        <div className="bg-gradient-to-br from-primary to-[#5a1414] text-primary-foreground text-center text-sm font-bold py-2 rounded-xl shadow-md shadow-primary/15 mt-1 flex items-center justify-center gap-2">
+          <ShoppingBag className="w-4 h-4" />
+          اشترِ الآن
+        </div>
+      </div>
+    </Link>
   );
 }
 

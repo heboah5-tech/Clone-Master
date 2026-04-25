@@ -21,9 +21,18 @@ export const MORE_OFFERS: Item[] = [
   {
     id: "tib",
     titleAr: "باقة الطيب",
-    subtitleAr: "تشكيلة من أرقى العطور بسعر مميز",
-    price: 395,
-    image: "/products/offer-tib.png",
+    subtitleAr: "إصدار خاص — 7 عطور فاخرة في علبة هدية",
+    price: 199,
+    image: "/products/offer-tib-real.png",
+    badge: "إصدار خاص",
+  },
+  {
+    id: "nasamat",
+    titleAr: "نسمات دخوني",
+    subtitleAr: "تشكيلة من 8 عطور فاخرة بسعر مميز",
+    price: 495,
+    originalPrice: 1980,
+    image: "/products/offer-nasamat.png",
   },
   {
     id: "omr",
@@ -87,9 +96,18 @@ export const FEATURED_PERFUMES: Item[] = [
   { id: "so-sweety", titleAr: "So Sweety", price: 175, image: "/products/p-so-sweety.png" },
   { id: "doha-skyline", titleAr: "Doha Skyline", price: 195, image: "/products/p-doha-skyline.png" },
   { id: "hilal-9", titleAr: "Hilal 9", price: 245, image: "/products/p-hilal-9.png" },
+  { id: "signature-black", titleAr: "Signature Black", price: 215, image: "/products/p-signature-black.png" },
+  { id: "private-velvet", titleAr: "Private Velvet & Rose", price: 225, image: "/products/p-private-velvet.png" },
+  { id: "couture", titleAr: "كوتور Couture", price: 245, image: "/products/p-couture.png" },
 ];
 
-const ALL_ITEMS: Item[] = [MAIN_OFFER, ...MORE_OFFERS, ...FEATURED_PERFUMES];
+export const BUKHOOR_ITEMS: Item[] = [
+  { id: "dkhoon-emiratia", titleAr: "دخون الإماراتية", subtitleAr: "بخور فاخر برائحة آسرة", price: 295, image: "/products/b-dkhoon-emiratia.png" },
+  { id: "oud-turath", titleAr: "عود التراث", subtitleAr: "بخور أصيل بنفحة شرقية", price: 245, image: "/products/b-oud-turath.png" },
+  { id: "daqat-oud", titleAr: "دقة عود", subtitleAr: "تركيبة فريدة من العود الفاخر", price: 245, image: "/products/b-daqat-oud.png" },
+];
+
+const ALL_ITEMS: Item[] = [MAIN_OFFER, ...MORE_OFFERS, ...FEATURED_PERFUMES, ...BUKHOOR_ITEMS];
 
 export function findItem(id: string | null | undefined): Item {
   if (!id) return MAIN_OFFER;
