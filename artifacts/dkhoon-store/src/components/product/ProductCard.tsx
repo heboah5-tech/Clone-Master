@@ -95,12 +95,12 @@ export default function ProductCard({ product }: ProductCardProps) {
         {/* Price row: sale price (red) + original strikethrough */}
         <div className="flex items-baseline justify-center gap-2 flex-wrap mt-1">
           <span className="text-base sm:text-lg font-bold text-[#c92a2a]">
-            <span className="ml-0.5">د.إ</span>
+            <span className="ml-0.5">ر.س</span>
             {price.toFixed(2)}
           </span>
           {hasDiscount && (
             <span className="text-xs sm:text-sm text-muted-foreground line-through">
-              <span className="ml-0.5">د.إ</span>
+              <span className="ml-0.5">ر.س</span>
               {originalPrice.toFixed(2)}
             </span>
           )}

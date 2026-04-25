@@ -91,11 +91,11 @@ export default function ProductDetail() {
             <div className="mb-8 p-4 bg-muted/50 rounded-xl border border-border/50">
               {originalPrice && originalPrice > price ? (
                 <div className="flex items-center gap-4 flex-wrap">
-                  <span className="text-4xl font-bold text-primary">{price} د.إ</span>
-                  <span className="text-xl text-muted-foreground line-through font-medium">{originalPrice} د.إ</span>
+                  <span className="text-4xl font-bold text-primary">{price} ر.س</span>
+                  <span className="text-xl text-muted-foreground line-through font-medium">{originalPrice} ر.س</span>
                 </div>
               ) : (
-                <span className="text-4xl font-bold text-primary">{price} د.إ</span>
+                <span className="text-4xl font-bold text-primary">{price} ر.س</span>
               )}
               <p className="text-xs text-muted-foreground mt-2 font-medium">السعر شامل ضريبة القيمة المضافة</p>
             </div>

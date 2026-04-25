@@ -58,7 +58,7 @@ export default function Cart() {
                         {item.product.nameAr}
                       </Link>
                       <p className="text-primary font-bold mt-2">
-                        {price} د.إ
+                        {price} ر.س
                       </p>
                     </div>
                     <button 
@@ -90,7 +90,7 @@ export default function Cart() {
                     </div>
                     
                     <div className="font-bold text-foreground text-sm bg-muted/50 px-3 py-1.5 rounded-lg border border-border/50">
-                      الإجمالي: {price * item.quantity} د.إ
+                      الإجمالي: {price * item.quantity} ر.س
                     </div>
                   </div>
                 </div>
@@ -107,7 +107,7 @@ export default function Cart() {
             <div className="space-y-4 mb-6 text-sm font-medium text-foreground/80">
               <div className="flex justify-between">
                 <span>المجموع الفرعي</span>
-                <span className="text-foreground">{totalPrice} د.إ</span>
+                <span className="text-foreground">{totalPrice} ر.س</span>
               </div>
               <div className="flex justify-between">
                 <span>الشحن</span>
@@ -118,7 +118,7 @@ export default function Cart() {
             <div className="border-t border-border/50 pt-4 mb-6 bg-muted/30 -mx-6 px-6 pb-6 rounded-b-xl">
               <div className="flex justify-between items-end mb-2">
                 <span className="font-bold text-lg text-foreground">الإجمالي الكلي</span>
-                <span className="font-bold text-2xl text-primary">{totalPrice} د.إ</span>
+                <span className="font-bold text-2xl text-primary">{totalPrice} ر.س</span>
               </div>
               <p className="text-xs text-muted-foreground font-medium mb-6">السعر شامل ضريبة القيمة المضافة</p>
               

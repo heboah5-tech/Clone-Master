@@ -17,7 +17,7 @@ export default function Navbar() {
   return (
     <>
       <div className="bg-primary text-primary-foreground py-1.5 px-4 text-center text-sm font-bold tracking-wide">
-        شحن مجاني للطلبات فوق 300 د.إ
+        شحن مجاني للطلبات فوق 300 ر.س
       </div>
       <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/95 shadow-sm">
         <div className="container mx-auto px-4 h-20 flex items-center justify-between">
