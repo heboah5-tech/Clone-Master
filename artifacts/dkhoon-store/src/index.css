@@ -2,6 +2,14 @@
 @import "tw-animate-css";
 @plugin "@tailwindcss/typography";
 
+@font-face {
+  font-family: 'Lama Sans';
+  src: url('/fonts/LamaSans-SemiBold.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -45,8 +53,8 @@
 }
 
 :root {
-  --app-font-sans: 'Noto Naskh Arabic', 'Inter', sans-serif;
-  --app-font-serif: 'Amiri', Georgia, serif;
+  --app-font-sans: 'Lama Sans', 'Noto Naskh Arabic', 'Inter', sans-serif;
+  --app-font-serif: 'Lama Sans', 'Amiri', Georgia, serif;
   --app-font-mono: Menlo, monospace;
   --radius: 0.5rem;
 
