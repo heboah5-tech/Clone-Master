@@ -16,6 +16,8 @@ import {
   Check,
 } from "lucide-react";
 import { findItem } from "@/data/offers";
+import { createOrder } from "@/lib/orders";
+import { isFirebaseConfigured } from "@/lib/firebase";
 
 const SHIPPING = 0;
 
@@ -31,6 +33,7 @@ export default function Checkout() {
   const [step, setStep] = useState<Step>(1);
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [orderNumber, setOrderNumber] = useState<string | null>(null);
   const [form, setForm] = useState({
     fullName: "",
     email: "",
@@ -110,13 +113,38 @@ export default function Checkout() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const submitOrder = () => {
+  const submitOrder = async () => {
     if (!validateStep2()) return;
     setSubmitting(true);
-    setTimeout(() => {
-      setSubmitting(false);
+    try {
+      if (isFirebaseConfigured) {
+        const result = await createOrder({
+          itemId: OFFER.id,
+          itemTitle: OFFER.titleAr,
+          itemImage: OFFER.image,
+          quantity: 1,
+          unitPrice: OFFER.price,
+          total,
+          customerName: form.fullName.trim(),
+          customerEmail: form.email.trim().toLowerCase(),
+          customerPhone: form.phone.trim(),
+          shippingAddress: form.address.trim(),
+          shippingCity: form.city.trim(),
+        });
+        setOrderNumber(result.orderNumber);
+      } else {
+        setOrderNumber(`DKH-${Math.floor(Math.random() * 90000 + 10000)}`);
+      }
       setSubmitted(true);
-    }, 900);
+    } catch (err) {
+      console.error("Failed to create order:", err);
+      toast({
+        title: "تعذر إرسال الطلب",
+        description: "حدث خطأ، يرجى المحاولة مرة أخرى.",
+      });
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const handleFormSubmit = (e: React.FormEvent) => {
@@ -140,7 +168,7 @@ export default function Checkout() {
           </p>
           <div className="w-full bg-muted/40 rounded-xl p-4 text-sm text-foreground/80 font-bold flex justify-between border border-border/40">
             <span>رقم الطلب</span>
-            <span className="text-primary">#{Math.floor(Math.random() * 90000 + 10000)}</span>
+            <span className="text-primary font-mono">{orderNumber ?? "—"}</span>
           </div>
           <Link href="/" className="w-full">
             <Button size="lg" className="w-full bg-primary text-primary-foreground hover:bg-primary/90 font-bold rounded-xl py-6">
